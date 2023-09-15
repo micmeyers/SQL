@@ -1,0 +1,119 @@
+#I am utilizing a sales database that has customer, sales employess and product (musical tracks) information
+#These are the queries I did to analyze the data
+
+#What customers are not in the US?
+SELECT firstname,
+       lastname,
+       country
+  FROM chinook.customers
+ WHERE country != "USA";
+
+#Which customers are in Brazil?
+SELECT firstname,
+       lastname
+  FROM chinook.customers
+ WHERE country = "Brazil";
+
+#Find the Invoices of customers who are from Germany. I want to show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT cus.firstname,
+       cus.lastname,
+       inv.invoiceId,
+       inv.invoicedate,
+       inv.billingcountry
+  FROM chinook.customers AS cus
+       LEFT JOIN
+       chinook.invoices AS inv ON cus.customerID = inv.customerID
+ WHERE country = "Germany";
+
+#Which invoices are associated with which sales reps?
+SELECT emp.firstname,
+       emp.lastname,
+       inv.invoiceID
+  FROM chinook.invoices AS inv
+       JOIN
+       chinook.customers AS cus ON inv.customerID = cus.customerID
+       JOIN
+       chinook.employees AS emp ON cus.supportRepID = emp.employeeID;
+
+#Which employees are in sales?
+SELECT firstname,
+       lastname,
+       title
+  FROM chinook.employees
+ WHERE title LIKE "%sales%";
+
+#What are the unique billing countries?
+SELECT DISTINCT billingcountry
+  FROM chinook.invoices
+ ORDER BY billingcountry ASC;
+
+#What are the invoice totals for all invoices and customers and which employees are assigned to them?
+SELECT inv.total AS [Invoice total],
+       cus.firstname AS [Cus First Name],
+       cus.lastname AS [Cus Last Name],
+       cus.country AS [Cus country],
+       emp.firstname AS [Sales Rep First Name],
+       emp.lastname AS [Sales Rep Last Name]
+  FROM chinook.invoices AS inv
+       JOIN
+       chinook.customers AS cus ON inv.customerID = cus.customerID
+       JOIN
+       chinook.employees AS emp ON cus.supportRepID = emp.employeeID;
+
+#How many invoices were in 2009?
+SELECT count(invoiceDate) AS [Invoices in 2009]
+  FROM chinook.invoices
+ WHERE invoiceDate LIKE "%2009%";
+
+#What are the total sales in 2009?
+SELECT round(sum(total) ) AS [Sum of Sales in 2009]
+  FROM chinook.invoices
+ WHERE invoicedate LIKE "%2009%";
+
+#Which tracks are associated with each invoice ID?
+SELECT inv.InvoiceId,
+       tracks.name
+  FROM chinook.invoice_items AS invit
+       JOIN
+       chinook.invoices AS inv ON inv.invoiceID = invit.invoiceid
+       JOIN
+       chinook.tracks AS tracks ON invit.trackid = tracks.trackid;
+
+#Who is the artist for each trach and invoice ID?
+SELECT inv.InvoiceId,
+       tracks.name AS [track name],
+       art.name AS [artist name]
+  FROM chinook.invoice_items AS invit
+       JOIN
+       chinook.invoices AS inv ON inv.invoiceID = invit.invoiceid
+       JOIN
+       chinook.tracks AS tracks ON invit.trackid = tracks.trackid
+       JOIN
+       chinook.albums AS alb ON alb.albumid = tracks.AlbumId
+       JOIN
+       chinook.artists AS art ON art.artistid = alb.artistid;
+
+#What are the total sales made by each agent?
+SELECT round(sum(total) ) AS [Total Sales],
+       emp.firstname AS [First Name],
+       emp.lastname AS [Last Name]
+  FROM chinook.customers cust
+       JOIN
+       chinook.invoices inv ON inv.customerid = cust.customerid
+       JOIN
+       chinook.employees emp ON emp.employeeid = cust.supportrepid
+ GROUP BY emp.employeeID;
+
+#Which sales agent made the most sales in 2009?
+SELECT round(sum(total) ) AS [Total Sales],
+       emp.firstname AS [First Name],
+       emp.lastname AS [Last Name]
+  FROM chinook.customers cust
+       JOIN
+       chinook.invoices inv ON inv.customerid = cust.customerid
+       JOIN
+       chinook.employees emp ON emp.employeeid = cust.supportrepid
+ WHERE inv.invoicedate LIKE "%2009%"
+ GROUP BY emp.employeeID
+ ORDER BY round(sum(total) ) DESC
+ LIMIT 1;
