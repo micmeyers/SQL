@@ -1,11 +1,21 @@
 select * from games.games_dataset;
+
 -- What is the average User rating of the video games by genre? 
+
 select avg(user_rating) as 'average user rating', genre from games.games_dataset group by genre;
+
 -- What is the average User rating of the video games by platform?
+
 select avg(user_rating) as 'Average_Rating', platform from games.games_dataset group by platform;
+
 -- How many games where released after 2015 in each genre?
+
 select count(genre) as 'Number of Games Released after 2015', genre from games.games_dataset where release_year > 2015 group by genre;
+
 -- Select all video games in the simulation or action genres
+
 select * from games.games_dataset where genre = 'simulation' or 'action'; 
+
 -- Select all video games where platform is the Xbox and rating is 9 and above
+
 select * from games.games_dataset where platform = 'Xbox' and user_rating > 9 order by user_rating desc;
