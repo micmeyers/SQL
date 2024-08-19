@@ -1,3 +1,5 @@
-# SQL
-SQL Portfolio
- Welcome to my SQL portfolio, where I have documented my SQL projects I have made for fun and through an SQL bootcamp. Feel free to reach out to me with any questions or comments @ meyersmichellea@gmail.com
+# Michelle Meyer's SQL Portfolio
+
+Hello, and thanks for stopping by! This repository contains examples of SQL I've written for solo projects and while working through data analytics courses. Below are a few highlighted projects, including data visualizations I created using Tableau. Feel free to take a look around and reach out if you have any feedback or questions. 
+
+#Highlighted Projects
